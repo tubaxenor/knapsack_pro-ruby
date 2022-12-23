@@ -29,6 +29,7 @@ module KnapsackPro
       response = connection.call
       if connection.success?
         raise ArgumentError.new(response) if connection.errors?
+        KnapsackPro.logger.info("CLIENT CALL SUCCESS")
         BuildDistributionEntity.new(response)
       else
         KnapsackPro.logger.warn("Slow test files fallback behaviour started. We could not connect with Knapsack Pro API to fetch last CI build test files that are needed to determine slow test files. No test files will be split by test cases. It means all test files will be split by the whole test files as if split by test cases would be disabled https://github.com/KnapsackPro/knapsack_pro-ruby#split-test-files-by-test-cases")

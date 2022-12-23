@@ -13,11 +13,19 @@ module KnapsackPro
       build_distribution_entity = KnapsackPro::BuildDistributionFetcher.call
       test_files_from_api = build_distribution_entity.test_files
 
+      KnapsackPro.logger.info("test_files_from_api: #{test_files_from_api.size}")
+
       merged_test_files_from_api = KnapsackPro::TestCaseMergers::BaseMerger.call(adapter_class, test_files_from_api)
+
+      KnapsackPro.logger.info("merged_test_files_from_api: #{merged_test_files_from_api.size}")
 
       test_files_existing_on_disk = KnapsackPro::TestFileFinder.select_test_files_that_can_be_run(adapter_class, merged_test_files_from_api)
 
+      KnapsackPro.logger.info("test_files_existing_on_disk: #{test_files_existing_on_disk.size}")
+
       slow_test_files = KnapsackPro::SlowTestFileDeterminer.call(test_files_existing_on_disk, build_distribution_entity.time_execution)
+
+      KnapsackPro.logger.info("slow_test_files: #{slow_test_files.size}")
 
       KnapsackPro::SlowTestFileDeterminer.save_to_json_report(slow_test_files)
 
